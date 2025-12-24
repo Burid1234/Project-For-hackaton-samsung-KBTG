@@ -1,2 +1,2 @@
-# Project-For-hackaton-samsung-KBTG
+# ZENSEC-For-hackaton-samsung-KBTG
 การนำเสนอความคืบหน้าของผลงงานและการพัฒนาของทีมเราในการสร้างโปรเจคในครั้งนี้
