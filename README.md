@@ -1,7 +1,7 @@
-# ZENSEC-For-hackaton-samsung-KBTG
+# VAULTSEC-For-hackaton-samsung-KBTG
 การนำเสนอความคืบหน้าของผลงงานและการพัฒนาของทีมเราในการสร้างโปรเจคในครั้งนี้
 
-# ZenSec Beyond: On-Device AI Fraud Prevention Chipset Architecture
+# VAULTSEC On-Device AI Fraud Prevention Chipset Architecture
 
 > **Solution for Samsung x KBTG Digital Fraud Cybersecurity Hackathon **
 
