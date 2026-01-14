@@ -29,11 +29,11 @@ SILENCE_DURATION_MS = 1000
 SILENCE_LIMIT_FRAMES = int(SILENCE_DURATION_MS / VAD_FRAME_MS)
 
 def send_to_typhoon_simulation(wav_data):
-    print(f"\n🚀 [API MOCK] Sending {len(wav_data)} bytes to Typhoon Engine...")
+    print(f"\n [API MOCK] Sending {len(wav_data)} bytes to Typhoon Engine")
     time.sleep(0.5)
-    print("✅ [API MOCK] Typhoon Response: 'Fraud Intent Detected'")
+    print(" [API MOCK] Typhoon Response: 'Fraud Intent Detected'")
     print("-" * 60)
-    print("🎤 Waiting for next sentence...\n")
+    print(" Waiting for next sentence...\n")
 
 def main():
     vad = webrtcvad.Vad(VAD_MODE)
@@ -46,8 +46,8 @@ def main():
                     frames_per_buffer=ESP32_CHUNK // 2)
 
     print("\n" + "="*60)
-    print("🎙️  SYSTEM READY: Simulation Mode Active")
-    print(f"⏱️  Silence Timeout: {SILENCE_DURATION_MS} ms")
+    print("  SYSTEM READY: Simulation Mode Active")
+    print(f"  Silence Timeout: {SILENCE_DURATION_MS} ms")
     print("="*60 + "\n")
 
     raw_buffer = b"" 
@@ -88,7 +88,7 @@ def main():
                     silence_counter += 1
 
                     if silence_counter > SILENCE_LIMIT_FRAMES:
-                        print(f"\n✂️  [CUT] End of Sentence Detected ({SILENCE_DURATION_MS}ms silence)")
+                        print(f"\n  [CUT] End of Sentence Detected ({SILENCE_DURATION_MS}ms silence)")
                         
                         ram_file = io.BytesIO()
                         
@@ -103,7 +103,7 @@ def main():
                         
                         hex_preview = wav_data[:16].hex().upper()
                         
-                        print(f"🧐 HEX HEADER CHECK: {hex_preview}")
+                        print(f" HEX HEADER CHECK: {hex_preview}")
                         if hex_preview.startswith("52494646"):
                             print("  Header Valid (RIFF/WAVE in RAM)")
                         else:
@@ -116,7 +116,7 @@ def main():
                         silence_counter = 0
 
     except KeyboardInterrupt:
-        print("\n👋 Simulation Stopped")
+        print("\n Simulation Stopped")
     finally:
         stream.stop_stream()
         stream.close()
