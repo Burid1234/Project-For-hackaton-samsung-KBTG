@@ -5,10 +5,12 @@
 ###  Key Implementation Logic
 
 #### 1. Custom Protocol Synchronization (Anti-Drift)
-เราไม่สามารถเชื่อใจได้ว่าข้อมูลจาก Serial จะมาเป็นก้อนที่สมบูรณ์เสมอไป โค้ดชุดนี้จึงทำงานแบบ **State Machine** เพื่อค้นหาจุดเริ่มต้นของเฟรม:
+เราไม่สามารถเชื่อใจได้ว่าข้อมูลจาก Serial จะมาเป็นก้อนที่สมบูรณ์ได้เสมอไป โค้ดเราชุดนี้จึงทำงานแบบ **State Machine** เพื่อค้นหาจุดเริ่มต้นของเฟรม:
 ```python
-# Code Snippet: Header Detection Logic
-idx_ca = buffer.find(b'\xCA\xDB')
+# Code Snippet Header Detection Logic
+idx_ca = buffer.find(b'\xCA\xDB') , เรากำหนด(Logic)โปรโตคอลขึ้นมาเองเพื่อดักจับข้อมูลที่เริ่มต้นด้วย 0xCA , 0xDB จากการส่งข้อมูลที่ได้จาก {bt_app_hf.c}
+จนผลสุดท้ายนั้น **เราจับข้อมูลได้แบ่งเป็น Chunk จับใส่ใน .wav เพื่อที่ว่า เราจึงสรุปได้ว่า เรานั้นสามารถจับเสียงได้มาเป็นก้อนจริงๆได้สำเร็จครับ** 
+เป็นข้อสรุปได้ว่าในอนาคตเราจะสามารถใช้ VAD ในการแบ่งช่วงเสียงจาก .wav เพื่อทำเป็นรูปแบบ Real-time ได้จริง 
 
 
 import serial
@@ -31,18 +33,17 @@ def main():
     frames = []       
 
     try:
-        print(f"🔌 Connecting to {SERIAL_PORT} @ {BAUD_RATE}...")
+        print(f" Connecting to {SERIAL_PORT} @ {BAUD_RATE}...")
         ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=0.1)
         ser.dtr = False
         ser.rts = False
         
-        print("\n" + "="*50)
-        print(" FINAL BATTLE: Anti-Drift Mode")
+        print(" Anti-Drift Mode")
         print("1. ต่อ Bluetooth")
         print("2. โทรออกและคุยยาวๆ ได้เลย")
         print("="*50 + "\n")
         
-        print(f"⏳ กำลังดูดข้อมูล... (แก้เสียงซ่าอัตโนมัติ)")
+        print(f" กำลังดูดข้อมูล (แก้เสียงซ่าอัตโนมัติ)")
         
         total_bytes = 0
         buffer = b""
@@ -84,7 +85,7 @@ def main():
                                 total_bytes += len(payload)
                                 
                                 if packet_count % 100 == 0:
-                                    sys.stdout.write(f"\r📦 Pkts: {packet_count} | Size: {total_bytes} bytes")
+                                    sys.stdout.write(f"\r Pkts: {packet_count} | Size: {total_bytes} bytes")
                                     sys.stdout.flush()
                         
         
@@ -93,23 +94,23 @@ def main():
                         break
                         
     except KeyboardInterrupt:
-        print("\n\n👋 หยุดบันทึก...")
+        print("\n\n หยุดบันทึก")
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        print(f"\n Error: {e}")
     finally:
         if ser and ser.is_open: ser.close()
         
     
         if packet_count > 0:
-            print(f"\n💾 บันทึกไฟล์ {OUTPUT_FILE}")
+            print(f"\n บันทึกไฟล์ {OUTPUT_FILE}")
             with wave.open(OUTPUT_FILE, 'wb') as wf:
                 wf.setnchannels(CHANNELS)
                 wf.setsampwidth(WIDTH)
                 wf.setframerate(SAMPLE_RATE)
                 wf.writeframes(b''.join(frames))
-            print("🎉 เสร็จสิ้น! ลองฟังดูครับ เสียงน่าจะนิ่งแล้ว")
+            print(" เสร็จสิ้น! ลองฟังครับ ")
         else:
-            print("\n⚠️ ไม่ได้ข้อมูล")
+            print("\n ไม่ได้ข้อมูล")
 
 if __name__ == "__main__":
     main()
